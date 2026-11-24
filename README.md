@@ -35,3 +35,19 @@ route. Configure branch protection for `main` with the required status check
 `WAF compatibility`, require an up-to-date branch and apply it to administrators.
 Renovate PRs must pass this check before merging. Do not rename the job without
 also updating the required check in GitHub.
+
+## New major releases
+
+`Watch upstream major releases` checks the official Caddy, Coraza Caddy adapter
+and CrowdSec bouncer GitHub releases daily at 06:43 Pacific/Tahiti, on main
+pushes and on manual dispatch. It compares stable release majors with the
+Containerfile pins, independently of Go module paths such as `/v2`.
+It opens one migration issue per component and newer major, never automatically
+changes a dependency. Closed alerts are acknowledged and are not recreated.
+Prereleases and drafts are excluded. Minor and patch updates, including bouncer
+0.x minor updates, remain handled by Renovate. This watches the Coraza Caddy
+adapter, not the separately versioned transitive Coraza engine.
+
+Run `python3 scripts/watch_major_releases.py` for a read-only live check;
+`--create-issues` enables alerts using `GH_TOKEN` and `GITHUB_REPOSITORY`.
+API failures fail the workflow rather than report a clean scan.
