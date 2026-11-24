@@ -46,6 +46,7 @@ try:
     print('PASS: compiled modules', flush=True)
     run('network', 'create', network)
     run('run', '-d', '--name', cs, '--network', network, '--network-alias', 'crowdsec',
+        '-v', '/var/lib/crowdsec/data', '-v', '/etc/crowdsec',
         '-e', 'DISABLE_ONLINE_API=true', crowdsec_image)
     eventually(lambda: run('exec', cs, 'cscli', 'lapi', 'status', check=False).returncode == 0,
                'CrowdSec ready')
