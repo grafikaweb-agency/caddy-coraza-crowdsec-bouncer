@@ -1,0 +1,25 @@
+name: Watch upstream major releases
+on:
+  schedule:
+    # Daily at 06:43 Pacific/Tahiti (UTC-10).
+    - cron: '43 16 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: upstream-major-release-watch
+  cancel-in-progress: false
+jobs:
+  watch:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/watch_major_releases.py --create-issues
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
