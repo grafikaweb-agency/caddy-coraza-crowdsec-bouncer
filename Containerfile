@@ -1,16 +1,16 @@
-FROM golang:1.26-alpine AS builder
+FROM golang:1.26-alpine3.24 AS builder
 
 RUN apk add --no-cache ca-certificates git
-RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@v0.4.7
 
 ENV PATH="/root/go/bin:${PATH}"
 
-RUN xcaddy build latest \
-    --with github.com/corazawaf/coraza-caddy/v2 \
+RUN xcaddy build v2.11.9 \
+    --with github.com/corazawaf/coraza-caddy/v2@v2.6.2 \
     --with github.com/hslatman/caddy-crowdsec-bouncer/http@v0.14.1 \
     --output /usr/bin/caddy
 
-FROM alpine:latest
+FROM alpine:3.24
 
 RUN apk add --no-cache ca-certificates \
     && addgroup -S -g 8080 caddy \

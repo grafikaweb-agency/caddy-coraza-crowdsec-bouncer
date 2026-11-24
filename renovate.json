@@ -1,0 +1,62 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "timezone": "Pacific/Tahiti",
+  "schedule": ["before 5am on Monday"],
+  "prConcurrentLimit": 5,
+  "pinDigests": true,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track the pinned xcaddy Go tool",
+      "managerFilePatterns": ["/^Containerfile$/"],
+      "matchStrings": [
+        "go install github.com/caddyserver/xcaddy/cmd/xcaddy@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "github.com/caddyserver/xcaddy",
+      "datasourceTemplate": "go",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Track the pinned Caddy Go module",
+      "managerFilePatterns": ["/^Containerfile$/"],
+      "matchStrings": [
+        "xcaddy build (?<currentValue>v\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "github.com/caddyserver/caddy/v2",
+      "datasourceTemplate": "go",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Track the pinned Coraza Caddy module",
+      "managerFilePatterns": ["/^Containerfile$/"],
+      "matchStrings": [
+        "--with github.com/corazawaf/coraza-caddy/v2@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "github.com/corazawaf/coraza-caddy/v2",
+      "datasourceTemplate": "go",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Track the pinned CrowdSec Caddy bouncer module",
+      "managerFilePatterns": ["/^Containerfile$/"],
+      "matchStrings": [
+        "--with github.com/hslatman/caddy-crowdsec-bouncer/http@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"
+      ],
+      "depNameTemplate": "github.com/hslatman/caddy-crowdsec-bouncer",
+      "datasourceTemplate": "go",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Review custom Caddy build components together",
+      "matchManagers": ["custom.regex"],
+      "matchDatasources": ["go"],
+      "groupName": "Caddy build modules"
+    }
+  ]
+}
